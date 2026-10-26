@@ -32,9 +32,8 @@ import numpy as np
 # Allow importing bench_common from the parent benchmarks/ directory
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from bench_common import (
-    AG_BASE,
+    ag_base,
     OPENAI_BASE,
-    env,
     latency_stats,
     ag_headers,
     openai_headers,
@@ -43,7 +42,6 @@ from bench_common import (
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bench_stats import (
-    bootstrap_ci_pairs,
     macro_f1,
     mcnemar_test,
     span_f1,
@@ -168,7 +166,7 @@ def run_ag(items: list[dict], client: httpx.Client) -> dict:
         try:
             body, ms = timed_post(
                 client,
-                f"{AG_BASE}/pii-vault/tokenize",
+                f"{ag_base()}/pii-vault/tokenize",
                 ag_headers(),
                 {"text": item["text"], "format_preserving": False},
             )
@@ -274,7 +272,7 @@ def run_ag_llm(items: list[dict], client: httpx.Client) -> dict:
         try:
             body, ms = timed_post(
                 client,
-                f"{AG_BASE}/pii-vault/tokenize",
+                f"{ag_base()}/pii-vault/tokenize",
                 ag_headers(),
                 {"text": item["text"], "format_preserving": False, "use_llm": True},
             )

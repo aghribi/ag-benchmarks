@@ -27,7 +27,7 @@ _THIS_DIR = Path(__file__).parent
 sys.path.insert(0, str(_THIS_DIR))
 
 
-from bench_common import AG_BASE, OPENAI_BASE, env, ag_headers, openai_headers, timed_post, latency_stats
+from bench_common import ag_base, OPENAI_BASE, ag_headers, openai_headers, timed_post, latency_stats
 from bench_stats import bootstrap_ci
 
 SEED = 42
@@ -155,7 +155,7 @@ def run_ag(items: list[dict], client: httpx.Client, use_llm: bool = False) -> di
         try:
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/pii-vault/tokenize",
+                f"{ag_base()}/pii-vault/tokenize",
                 headers=ag_headers(),
                 json={
                     "text": item["text"],
@@ -258,7 +258,6 @@ PROVIDERS = {
 def compute_metrics(per_item: list[dict]) -> dict:
     """Compute per-type F1 + macro F1 with bootstrap CI."""
     from collections import defaultdict
-    import numpy as np
 
     type_labels: dict[str, list[float]] = defaultdict(list)
 

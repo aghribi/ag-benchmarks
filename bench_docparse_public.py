@@ -33,8 +33,8 @@ _THIS_DIR = Path(__file__).parent
 sys.path.insert(0, str(_THIS_DIR))
 
 
-from bench_common import AG_BASE, OPENAI_BASE, env, ag_headers, openai_headers, latency_stats
-from bench_stats import bootstrap_ci, stratified_sample
+from bench_common import ag_base, OPENAI_BASE, env, ag_headers, openai_headers, latency_stats
+from bench_stats import bootstrap_ci
 
 SEED = 42
 RESULTS_DIR = _THIS_DIR / "results"
@@ -434,7 +434,7 @@ def run_ag_pipeline(items: list[dict], client: httpx.Client) -> dict:
         try:
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/doc/extract",
+                f"{ag_base()}/doc/extract",
                 headers=ag_headers(),
                 json={
                     "text": ocr_text,
@@ -484,7 +484,7 @@ def _fmt(v, decimals: int = 3) -> str:
 
 def print_table(all_results: dict[str, dict], n_items: int):
     print(f"\n── DocParse — CORD-v2 (N={n_items}) ─────────────────────────────────────")
-    print(f"\nTarget field: total_price (grand total)")
+    print("\nTarget field: total_price (grand total)")
     print(f"{'Provider':<25} {'Accuracy':>10} {'[95% CI]':>18} {'p50ms':>8} {'Errors':>8}")
     print("-" * 72)
 
@@ -497,7 +497,7 @@ def print_table(all_results: dict[str, dict], n_items: int):
         ci_s = f"[{_fmt(m['ci95_low'])}, {_fmt(m['ci95_high'])}]" if m["accuracy"] is not None else "N/A"
         print(f"{provider:<25} {acc_s:>10} {ci_s:>18} {str(p50):>8} {errs:>8}")
 
-    print(f"\nTarget field: subtotal_price")
+    print("\nTarget field: subtotal_price")
     print(f"{'Provider':<25} {'Accuracy':>10} {'[95% CI]':>18}")
     print("-" * 56)
     for provider, data in all_results.items():
@@ -559,7 +559,7 @@ def run_ag_llamaparse(items: list[dict], client: httpx.Client) -> dict:
             b64 = _image_to_base64(item["image_bytes"])
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/doc/extract",
+                f"{ag_base()}/doc/extract",
                 headers=ag_headers(),
                 json={
                     "image_base64": b64,

@@ -21,7 +21,7 @@ import json
 import os
 import sys
 import time
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import httpx
@@ -31,8 +31,8 @@ _THIS_DIR = Path(__file__).parent
 sys.path.insert(0, str(_THIS_DIR))
 
 
-from bench_common import AG_BASE, MISTRAL_BASE, env, ag_headers, mistral_headers, latency_stats
-from bench_stats import bootstrap_ci, bootstrap_ci_pairs, mcnemar_test
+from bench_common import ag_base, MISTRAL_BASE, ag_headers, mistral_headers, latency_stats
+from bench_stats import bootstrap_ci
 
 SEED = 42
 RESULTS_DIR = _THIS_DIR / "results"
@@ -101,7 +101,7 @@ def run_ag(corpus: list[dict], client: httpx.Client) -> dict:
         try:
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/guardrail/check",
+                f"{ag_base()}/guardrail/check",
                 headers=ag_headers(),
                 json={"text": item["text"], "detectors": ["harmful_content"]},
                 timeout=15,
@@ -130,7 +130,7 @@ def run_ag_hybrid(corpus: list[dict], client: httpx.Client) -> dict:
         try:
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/guardrail/check",
+                f"{ag_base()}/guardrail/check",
                 headers=ag_headers(),
                 json={"text": item["text"], "detectors": ["harmful_content", "llm_classifier"]},
                 timeout=30,

@@ -1,7 +1,7 @@
 # ag-benchmarks
 
 Open benchmark suite evaluating production AI safety APIs across four categories.
-All datasets are publicly available on HuggingFace. All results are reproducible with the provided scripts and a valid API key.
+All datasets are publicly available on HuggingFace. The files in `results/` were measured in May 2026 against the hosted deployment of [ag-platform](https://github.com/aghribi/ag-platform), which has since closed. Reproducing them needs a running deployment.
 
 ---
 
@@ -102,7 +102,7 @@ python3 bench_guardrail_aegis.py --providers ag ag_hybrid --n-items 1000
 
 All scripts accept `--providers` (subset of available providers), `--n-items`, and `--output` arguments.
 
-Hosted API keys are issued at [ai.artifact-network.org](https://ai.artifact-network.org).
+Set `AG_API_URL` to the ag-platform deployment under test and `AG_API_KEY` to a key it issued.
 
 ---
 

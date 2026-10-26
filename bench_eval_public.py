@@ -30,9 +30,9 @@ sys.path.insert(0, str(_THIS_DIR))          # benchmarks/public/ (for bench_stat
    # benchmarks/ (for bench_common)
 
 from bench_common import (
-    AG_BASE, OPENAI_BASE,
-    env, ag_headers, openai_headers,
-    timed_post, latency_stats, save_results,
+    ag_base, OPENAI_BASE,
+    ag_headers, openai_headers,
+    timed_post, latency_stats,
 )
 from bench_stats import bootstrap_ci, mcnemar_test, stratified_sample
 
@@ -205,7 +205,7 @@ def run_ag(pairs: list[dict], client: httpx.Client) -> dict:
             }
             for _attempt in range(3):
                 try:
-                    resp, ms = timed_post(client, f"{AG_BASE}/eval/score", ag_headers(), payload)
+                    resp, ms = timed_post(client, f"{ag_base()}/eval/score", ag_headers(), payload)
                     break
                 except Exception as retry_exc:
                     if "429" in str(retry_exc) and _attempt < 2:
@@ -335,7 +335,7 @@ def run_ag_pairwise(pairs: list[dict], client: httpx.Client) -> dict:
             }
             for _attempt in range(3):
                 try:
-                    resp, ms = timed_post(client, f"{AG_BASE}/eval/score", ag_headers(), payload)
+                    resp, ms = timed_post(client, f"{ag_base()}/eval/score", ag_headers(), payload)
                     break
                 except Exception as retry_exc:
                     if "429" in str(retry_exc) and _attempt < 2:

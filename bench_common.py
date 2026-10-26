@@ -8,7 +8,6 @@ from typing import Any
 
 import httpx
 
-AG_BASE = "https://ai-api.artifact-network.org/v1"
 OPENAI_BASE = "https://api.openai.com/v1"
 MISTRAL_BASE = "https://api.mistral.ai/v1"
 LLAMA_CLOUD_BASE = "https://api.cloud.llamaindex.ai/api"
@@ -19,6 +18,11 @@ def env(key: str) -> str:
     if not val:
         raise RuntimeError(f"Missing env var: {key}")
     return val
+
+
+def ag_base() -> str:
+    """API root of the ag-platform deployment under test, from AG_API_URL."""
+    return env("AG_API_URL").rstrip("/") + "/v1"
 
 
 def ag_headers() -> dict:

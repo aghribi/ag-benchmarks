@@ -27,9 +27,9 @@ sys.path.insert(0, str(_THIS_DIR))          # benchmarks/public/ (for bench_stat
    # benchmarks/ (for bench_common)
 
 from bench_common import (
-    AG_BASE, OPENAI_BASE, MISTRAL_BASE,
-    env, ag_headers, openai_headers, mistral_headers,
-    timed_post, latency_stats, save_results,
+    ag_base, OPENAI_BASE, MISTRAL_BASE,
+    ag_headers, openai_headers, mistral_headers,
+    timed_post, latency_stats,
 )
 from bench_stats import bootstrap_ci_pairs, mcnemar_test, stratified_sample
 
@@ -67,7 +67,6 @@ def load_toxigen(max_unsafe: int = 1000, max_safe: int = 500) -> list[dict]:
     """skg/toxigen-data — annotated split, threshold 3.5/2.0."""
     print("  Loading ToxiGen dataset...")
     from datasets import load_dataset
-    import numpy as np
 
     ds = load_dataset("skg/toxigen-data", name="annotated", split="train")
     rng = __import__("numpy").random.default_rng(SEED)
@@ -122,7 +121,6 @@ def load_pku_saferlhf(max_safe: int = 500) -> list[dict]:
     """PKU-Alignment/PKU-SafeRLHF — safe prompts only (FPR measurement)."""
     print("  Loading PKU-SafeRLHF dataset...")
     from datasets import load_dataset
-    import numpy as np
 
     ds = load_dataset("PKU-Alignment/PKU-SafeRLHF", split="train")
     safe_items: list[dict] = []
@@ -200,7 +198,7 @@ def run_ag(corpus: list[dict], client: httpx.Client) -> dict:
         try:
             body, ms = timed_post(
                 client,
-                f"{AG_BASE}/guardrail/check",
+                f"{ag_base()}/guardrail/check",
                 ag_headers(),
                 {
                     "text": item["text"],
@@ -241,7 +239,7 @@ def run_ag_hybrid(corpus: list[dict], client: httpx.Client) -> dict:
         try:
             body, ms = timed_post(
                 client,
-                f"{AG_BASE}/guardrail/check",
+                f"{ag_base()}/guardrail/check",
                 ag_headers(),
                 {
                     "text": item["text"],

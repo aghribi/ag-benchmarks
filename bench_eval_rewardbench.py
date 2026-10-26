@@ -31,8 +31,8 @@ _THIS_DIR = Path(__file__).parent
 sys.path.insert(0, str(_THIS_DIR))
 
 
-from bench_common import AG_BASE, OPENAI_BASE, env, ag_headers, openai_headers, latency_stats
-from bench_stats import bootstrap_ci, mcnemar_test
+from bench_common import ag_base, OPENAI_BASE, ag_headers, openai_headers, latency_stats
+from bench_stats import bootstrap_ci
 
 SEED = 42
 RESULTS_DIR = _THIS_DIR / "results"
@@ -129,7 +129,7 @@ def run_ag_pairwise(pairs: list[dict], client: httpx.Client) -> dict:
             try:
                 t0 = time.perf_counter()
                 r = client.post(
-                    f"{AG_BASE}/eval/score",
+                    f"{ag_base()}/eval/score",
                     headers=ag_headers(),
                     json={
                         "scorer": "pairwise_judge",

@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import argparse
 import ast
-import asyncio
 import base64
 import io
 import json
@@ -32,7 +31,7 @@ _THIS_DIR = Path(__file__).parent
 sys.path.insert(0, str(_THIS_DIR))
 
 
-from bench_common import AG_BASE, OPENAI_BASE, LLAMA_CLOUD_BASE, env, ag_headers, openai_headers, latency_stats
+from bench_common import ag_base, OPENAI_BASE, LLAMA_CLOUD_BASE, env, ag_headers, openai_headers, latency_stats
 from bench_stats import bootstrap_ci
 
 SEED = 42
@@ -200,7 +199,7 @@ def run_ag_llamaparse(items: list[dict], client: httpx.Client) -> dict:
             b64 = _image_to_base64(item["image_bytes"])
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/doc/extract",
+                f"{ag_base()}/doc/extract",
                 headers=ag_headers(),
                 json={
                     "image_base64": b64,
@@ -275,7 +274,7 @@ def run_ag_pipeline(items: list[dict], client: httpx.Client) -> dict:
         try:
             t0 = time.perf_counter()
             r = client.post(
-                f"{AG_BASE}/doc/extract",
+                f"{ag_base()}/doc/extract",
                 headers=ag_headers(),
                 json={"text": ocr_text, "fields": AG_FIELDS},
                 timeout=60,
